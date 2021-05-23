@@ -1,0 +1,55 @@
+<launch>
+
+  <!-- 迷你机器人，基础参数 -->
+  <arg name="robot_name" default="tianbot_mini" />
+  <arg name="scan_topic" default="scan" />
+  <arg name="odom_topic" default="$(arg robot_name)/odom" />
+  <arg name="cmd_vel_topic" default="$(arg robot_name)/cmd_vel" />
+
+  <!-- TF坐标变换，基础参数 -->
+  <arg name="laser_frame_id" default="laser" />
+  <arg name="global_frame_id" default="map" />
+  <arg name="base_frame_id" default="$(arg robot_name)/base_link" />
+  <arg name="odom_frame_id" default="$(arg robot_name)/odom" />
+
+  <!-- TF坐标变换，指定雷达与机器人旋转中心的位置关系 -->
+  <node pkg="tf" type="static_transform_publisher" name="base_link_to_laser" args="0.027 0 0.0705 0 0 0 $(arg base_frame_id) $(arg laser_frame_id) 100" />
+
+  <!-- MoveBase路径规矩算法，控制机器人进行导航 -->
+  <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen" clear_params="true">
+    <rosparam file="$(find tbm_slam_cartographer)/config/base/costmap_common_params.yaml" command="load" ns="global_costmap" />
+    <rosparam file="$(find tbm_slam_cartographertianbot_mini)/config/base/costmap_common_params.yaml" command="load" ns="local_costmap" />
+    <rosparam file="$(find tbm_slam_cartographer)/config/base/local_costmap_params.yaml" command="load" />
+    <rosparam file="$(find tbm_slam_cartographer)/config/base/global_costmap_params.yaml" command="load" />
+    <rosparam file="$(find tbm_slam_cartographer)/config/base/base_local_planner_params.yaml" command="load" /> -->
+
+    <!-- reset frame_id parameters using user input data -->
+    <param name="global_costmap/global_frame" value="$(arg global_frame_id)" />
+    <param name="global_costmap/robot_base_frame" value="$(arg base_frame_id)" />
+    <param name="local_costmap/global_frame" value="$(arg odom_frame_id)" />
+    <param name="local_costmap/robot_base_frame" value="$(arg base_frame_id)" />
+    <param name="DWAPlannerROS/global_frame_id" value="$(arg odom_frame_id)" />
+    <remap from="cmd_vel" to="$(arg cmd_vel_topic)" />
+    <remap from="odom" to="$(arg odom_topic)" />
+    <remap from="scan" to="$(arg scan_topic)" />
+  </node>
+
+  <!-- Cartographer  -->
+  <param name="/use_sim_time" value="false" />
+  <node name="cartographer_node" pkg="cartographer_ros"
+      type="cartographer_node" args="
+          -configuration_directory $(find tbm_slam_cartographer)/config
+          -configuration_basename lds_laser.lua"
+      output="screen" >
+    <remap from="scan" to="$(arg scan_topic)" />
+    <!-- <remap from="odom" to="$(arg odom_topic)" />-->
+  </node>
+
+  <node name="cartographer_occupancy_grid_node" pkg="cartographer_ros"
+      type="cartographer_occupancy_grid_node" args="-resolution 0.05" />
+
+
+  <!-- RVIZ可视化调试工具 -->
+  <node name="rviz" pkg="rviz" type="rviz" args="-d $(find tbm_slam_cartographer)/rviz/cartographer.rviz" />
+
+</launch>
