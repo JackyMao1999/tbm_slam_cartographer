@@ -15,30 +15,20 @@
   <!-- TF坐标变换，指定雷达与机器人旋转中心的位置关系 -->
   <node pkg="tf" type="static_transform_publisher" name="base_link_to_laser" args="0.027 0 0.0705 0 0 0 $(arg base_frame_id) $(arg laser_frame_id) 100" />
 
-  <!-- MoveBase路径规矩算法(TEB规划器)，控制机器人进行导航 -->
+  <!-- MoveBase路径规矩算法，控制机器人进行导航 -->
   <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen" clear_params="true">
-    <rosparam file="$(find tbm_slam_cartographer)/config/teb/diff_drive/costmap_common_params.yaml" command="load" ns="global_costmap" />
-    <rosparam file="$(find tbm_slam_cartographer)/config/teb/diff_drive/costmap_common_params.yaml" command="load" ns="local_costmap" />
-    <rosparam file="$(find tbm_slam_cartographer)/config/teb/diff_drive/local_costmap_params.yaml" command="load" />
-    <rosparam file="$(find tbm_slam_cartographer)/config/teb/diff_drive/global_costmap_params.yaml" command="load" />
-    <rosparam file="$(find tbm_slam_cartographer)/config/teb/diff_drive/teb_local_planner_params.yaml" command="load" />
-
-    <rosparam file="$(find tbm_slam_cartographer)/config/teb/diff_drive/costmap_converter_params.yaml" command="load" />
-
-    <param name="base_global_planner" value="global_planner/GlobalPlanner" />
-		<param name="planner_frequency" value="0.1" />
-		<param name="planner_patience" value="5.0" />
-
-		<param name="base_local_planner" value="teb_local_planner/TebLocalPlannerROS" />
-		<param name="controller_frequency" value="3.0" />
-		<param name="controller_patience" value="15.0" />
+    <rosparam file="$(find tbm_slam_cartographer)/config/base/costmap_common_params.yaml" command="load" ns="global_costmap" />
+    <rosparam file="$(find tbm_slam_cartographer)/config/base/costmap_common_params.yaml" command="load" ns="local_costmap" />
+    <rosparam file="$(find tbm_slam_cartographer)/config/base/local_costmap_params.yaml" command="load" />
+    <rosparam file="$(find tbm_slam_cartographer)/config/base/global_costmap_params.yaml" command="load" />
+    <rosparam file="$(find tbm_slam_cartographer)/config/base/base_local_planner_params.yaml" command="load" /> -->
 
     <!-- reset frame_id parameters using user input data -->
     <param name="global_costmap/global_frame" value="$(arg global_frame_id)" />
     <param name="global_costmap/robot_base_frame" value="$(arg base_frame_id)" />
     <param name="local_costmap/global_frame" value="$(arg odom_frame_id)" />
     <param name="local_costmap/robot_base_frame" value="$(arg base_frame_id)" />
-    <!-- <param name="DWAPlannerROS/global_frame_id" value="$(arg odom_frame_id)" /> -->
+    <param name="DWAPlannerROS/global_frame_id" value="$(arg odom_frame_id)" />
     <remap from="cmd_vel" to="$(arg cmd_vel_topic)" />
     <remap from="odom" to="$(arg odom_topic)" />
     <remap from="scan" to="$(arg scan_topic)" />
@@ -53,7 +43,6 @@
       output="screen" >
     <remap from="scan" to="$(arg scan_topic)" />
     <remap from="odom" to="$(arg odom_topic)" />
-    <!-- <remap from="odom" to="$(arg odom_topic)" />-->
   </node>
 
   <node name="cartographer_occupancy_grid_node" pkg="cartographer_ros"
@@ -61,6 +50,6 @@
 
 
   <!-- RVIZ可视化调试工具 -->
-  <node name="rviz" pkg="rviz" type="rviz" args="-d $(find tbm_slam_cartographer)/rviz/cartographer_teb.rviz" />
+  <node name="rviz" pkg="rviz" type="rviz" args="-d $(find tbm_slam_cartographer)/rviz/cartographer.rviz" />
 
 </launch>

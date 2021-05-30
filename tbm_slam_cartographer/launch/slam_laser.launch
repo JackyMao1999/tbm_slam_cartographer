@@ -18,7 +18,7 @@
   <!-- MoveBase路径规矩算法，控制机器人进行导航 -->
   <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen" clear_params="true">
     <rosparam file="$(find tbm_slam_cartographer)/config/base/costmap_common_params.yaml" command="load" ns="global_costmap" />
-    <rosparam file="$(find tbm_slam_cartographertianbot_mini)/config/base/costmap_common_params.yaml" command="load" ns="local_costmap" />
+    <rosparam file="$(find tbm_slam_cartographer)/config/base/costmap_common_params.yaml" command="load" ns="local_costmap" />
     <rosparam file="$(find tbm_slam_cartographer)/config/base/local_costmap_params.yaml" command="load" />
     <rosparam file="$(find tbm_slam_cartographer)/config/base/global_costmap_params.yaml" command="load" />
     <rosparam file="$(find tbm_slam_cartographer)/config/base/base_local_planner_params.yaml" command="load" /> -->

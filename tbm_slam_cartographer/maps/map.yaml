@@ -1,4 +1,4 @@
-image: ss2.pgm
+image: map.pgm
 resolution: 0.050000
 origin: [-13.487744, -34.635953, 0.000000]
 negate: 0
