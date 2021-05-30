@@ -1,5 +1,0 @@
-<launch>
-    <include file="$(find tbm_slam_cartographer)/launch/bringup.launch" />
-    <include file="$(find tbm_slam_cartographer)/launch/lidar.launch" />
-    <include file="$(find tbm_slam_cartographer)/launch/slam_laser_odom_teb.launch" />
-</launch>
