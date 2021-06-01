@@ -39,6 +39,7 @@ $ echo "source ~/tianbot_mini_ws/devel/setup.bash --extend" >> ~/.bashrc
 ## 使用方法
 
 1. 为了使用Cartographer算法，通过串口连接Tianbot_mini，并且输入usetf 0，看到串口回复OK，重启机器人。
+2. 使用tbm_slam_cartographer功能包一键运行cartographer建图。
 
 ## Launch文件
 
